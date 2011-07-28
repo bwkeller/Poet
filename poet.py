@@ -24,11 +24,11 @@ def encode_sentence_present(nouns, verbs, adjectives, inbits):
 	return "%s %s is %s the %s %s" % (adjective1[:-1], noun1[:-1], verb[:-1], adjective2[:-1], noun2[:-1])
 
 def decode_sentence_past(nouns, verbs, adjectives, insentence):
-	if insentence[-1] == '.':
+	if insentence[-2] == '.':
 		punct = '000'
-	elif insentence [-3:] == "!!!":
+	elif insentence[-4:-1] == "!!!":
 		punct = '011'
-	elif insentence[-2:] == "!!":
+	elif insentence[-3:-1] == "!!":
 		punct = '010'
 	else:
 		punct = '001'
@@ -50,14 +50,14 @@ def decode_sentence_past(nouns, verbs, adjectives, insentence):
 	return punct+adjective1+noun1+verb+adjective2+noun2
 
 def decode_sentence_present(nouns, verbs, adjectives, insentence):
-	if insentence[-1] == '.':
-		punct = '000'
-	elif insentence [-3:] == "!!!":
-		punct = '011'
-	elif insentence[-2:] == "!!":
-		punct = '010'
+	if insentence[-2] == '.':
+		punct = '100'
+	elif insentence [-4:-1] == "!!!":
+		punct = '111'
+	elif insentence[-3:-1] == "!!":
+		punct = '110'
 	else:
-		punct = '001'
+		punct = '101'
 	adjective1 = bin(adjectives.index(insentence.split()[0]+"\n"))[2:]
 	noun1 = bin(nouns.index(insentence.split()[1]+"\n"))[2:]
 	verb = bin(verbs.index(insentence.split()[3]+"\n"))[2:]
@@ -129,7 +129,6 @@ if __name__ == "__main__":
 				lineval = decode_sentence_present(nounlist, presentverblist,
 				adjectivelist, i)
 			for j in chop1byte(lineval):
-				print j
 				outfile.write(chr(int(j, 2)))
 	else:
 		print "Invalid Syntax"
